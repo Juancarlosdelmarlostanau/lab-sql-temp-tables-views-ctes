@@ -1,13 +1,11 @@
 USE sakila;
 
 -- Step 1: Create a View
-DROP TEMPORARY TABLE IF EXISTS rental_sumarizes;
 
-CREATE OR REPLACE VIEW rental_sumarizes AS
+CREATE VIEW rental_sumarizes AS
 SELECT
 c.customer_id,
-c.first_name,
-c.last_name,
+CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
 c.email,
 COUNT(r.rental_id) AS rental_count
 FROM customer c
@@ -44,10 +42,10 @@ FROM rental_sumarizes rs
 JOIN customer_total_paid ctp
 ON rs.customer_id = ctp.customer_id)
 SELECT
-first_name,
-last_name,
+customer_name
 email,
 rental_count,
 total_paid,
 total_paid / rental_count AS average
-FROM customer_sumary_cte;
+FROM customer_sumary_cte
+ORDER BY total_paid DESC;
